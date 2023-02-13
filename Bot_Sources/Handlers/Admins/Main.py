@@ -2,34 +2,13 @@ from .Settings import *
 
 
 class Admin_Handlers:
-    class Handlers:
-        @classmethod
-        async def demo_command(
-            cls,
-            message: types.Message,
-        ):
-            pass
-
-        @classmethod
-        async def demo_text(
-            cls,
-            message: types.Message,
-        ):
-            pass
-
-        @classmethod
-        async def demo_query(
-            cls,
-            call: types.CallbackQuery,
-        ):
-            pass
-
-        @classmethod
-        async def demo_state(
-            cls,
-            state: FSMContext,
-        ):
-            pass
+    class Handlers(
+        Commands,
+        Messages,
+        States,
+        Callbacks,
+    ):
+        pass
 
     @classmethod
     def register_admin_handlers(
@@ -40,31 +19,43 @@ class Admin_Handlers:
         attrs = (getattr(cls.Handlers(), name) for name in dir(cls.Handlers()))
         methods = filter(inspect.ismethod, attrs)
         for method in methods:
-            if "_command" in method.__name__:
+            if method.__name__.endswith("_command"):
                 dp.register_message_handler(
                     method,
                     filters.IDFilter(config.tg_bot.admin_ids),
                     commands=admin_commands[str(method.__name__)],
                 )
                 continue
-            if "_text" in method.__name__:
+            elif method.__name__.endswith("_message"):
                 dp.register_message_handler(
                     method,
                     filters.IDFilter(config.tg_bot.admin_ids),
                     text=admin_texts[str(method.__name__)],
                 )
                 continue
-            if "_query" in method.__name__:
+            elif method.__name__.endswith("_callback"):
                 dp.register_callback_query_handler(
                     method,
                     filters.IDFilter(config.tg_bot.admin_ids),
                     text=admin_callbacks[str(method.__name__)],
                 )
                 continue
-            if "_state" in method.__name__:
+            elif method.__name__.endswith("_state"):
                 dp.register_message_handler(
                     method,
                     filters.IDFilter(config.tg_bot.admin_ids),
                     state=admin_states[str(method.__name__)],
+                )
+                continue
+            elif method.__name__.endswith("_callback_custom"):
+                dp.register_callback_query_handler(
+                    method,
+                    admin_callbacks_custom[str(method.__name__)],
+                )
+                continue
+            elif method.__name__.endswith("_message_custom"):
+                dp.register_message_handler(
+                    method,
+                    content_types=admin_messages_custom[str(method.__name__)],
                 )
                 continue

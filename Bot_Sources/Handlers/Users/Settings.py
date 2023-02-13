@@ -1,32 +1,38 @@
 import inspect
+from typing import (
+    Dict,
+    List,
+)
 
 from aiogram import types
-from aiogram.dispatcher import FSMContext, filters
-from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.dispatcher import (
+    FSMContext,
+    filters,
+)
+from aiogram.dispatcher.filters.state import (
+    State,
+    StatesGroup,
+)
+
+from .Commands import Commands
+from .Messages import Messages
+from .Callbacks import Callbacks
+from .States import States
 
 
-class Demo_State(StatesGroup):
-    demo = State()
+users_commands: Dict[str, str] = {}
 
+users_texts: Dict[str, str] = {}
 
-users_commands = {
-    "demo_command": ["start", "старт"],
-}
+users_callbacks: Dict[str, str] = {}
 
-users_texts = {
-    "demo_text": "Текст",
-}
+users_states: Dict[str, object] = {}
 
-users_callbacks = {
-    "demo_query": "inline_demo",
-}
+moders_callbacks_custom = {}
 
-users_states = {
-    "demo_state": Demo_State.demo,
-}
+moders_messages_custom = {}
 
-
-__all__ = [
+__all__: List[str] = [
     "types",
     "FSMContext",
     "filters",
@@ -35,4 +41,6 @@ __all__ = [
     "users_texts",
     "users_callbacks",
     "users_states",
+    "moders_callbacks_custom",
+    "moders_messages_custom",
 ]
