@@ -4,13 +4,10 @@ import os
 from typing import NoReturn
 
 from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.contrib.fsm_storage.redis import RedisStorage2
-
+from aiogram.fsm.storage.redis import RedisStorage
+from aiogram.fsm.storage.memory import MemoryStorage
 from Bot_Sources.Bot import Bot_Factory
-from Bot_Sources.Filters import Admin_Filter, Moders_Filter, Users_Filter
 from Bot_Sources.Handlers import register_all_handlers
-from Bot_Sources.MiddleWares import register_all_middlewares
 
 logger = logging.getLogger(__name__)
 
@@ -18,16 +15,14 @@ logger = logging.getLogger(__name__)
 def on_start_up(
     dp,
     config,
-) -> NoReturn:
+) -> None:
     register_all_handlers(
         dp,
         config,
     )
-    # register_all_middlewares(dp)
-    # register_all_filters(dp)
 
 
-async def main() -> NoReturn:
+async def main() -> None:
     logging.basicConfig(
         level=logging.INFO,
         format="%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s",
@@ -37,9 +32,7 @@ async def main() -> NoReturn:
 
     storage = RedisStorage2() if config.tg_bot.use_redis else MemoryStorage()
     bot = Bot(token=config.tg_bot.token)
-    dp = Dispatcher(bot, storage=storage)
-
-    bot["config"] = config
+    dp = Dispatcher(storage=storage)
 
     on_start_up(
         dp,
@@ -47,10 +40,9 @@ async def main() -> NoReturn:
     )
 
     try:
-        await dp.start_polling()
+        await dp.start_polling(bot)
     finally:
         await dp.storage.close()
-        await dp.storage.wait_closed()
         await bot.session.close()
 
 
