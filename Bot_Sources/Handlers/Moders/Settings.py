@@ -1,47 +1,69 @@
 import inspect
-from typing import Dict
 
+from aiogram import Router
 from aiogram import types
-from aiogram.dispatcher import (
-    FSMContext,
-    filters,
-)
-from aiogram.dispatcher.filters.state import (
-    State,
-    StatesGroup,
-)
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State
+from aiogram.utils.magic_filter import MagicFilter
+from aiogram.filters import Command
+
 
 from .Commands import Commands
 from .Messages import Messages
-from .States import States
 from .Callbacks import Callbacks
-
-moders_commands: Dict[str, str] = {}
-
-moders_texts: Dict[str, str] = {}
-
-moders_callbacks: Dict[str, str] = {}
-
-moders_states: Dict[str, object] = {}
-
-moders_callbacks_custom = {}
-
-moders_messages_custom = {}
+from .States import States
 
 
-__all__ = [
+F = MagicFilter()
+
+
+moders_commands: dict[
+    str,
+    tuple[Command]
+    | tuple[MagicFilter]
+    | tuple[
+        State,
+        MagicFilter,
+    ],
+] = {}
+
+moders_messages: dict[
+    str,
+    tuple[MagicFilter],
+] = {}
+
+moders_callbacks: dict[
+    str,
+    tuple[State]
+    | tuple[MagicFilter]
+    | tuple[
+        State,
+        MagicFilter,
+    ],
+] = {}
+
+moders_states: dict[
+    str,
+    tuple[State]
+    | tuple[MagicFilter]
+    | tuple[
+        State,
+        MagicFilter,
+    ],
+] = {}
+
+
+__all__: list[str] = [
     "inspect",
+    "Router",
     "types",
     "FSMContext",
-    "filters",
     "Commands",
     "Messages",
-    "States",
     "Callbacks",
+    "States",
     "moders_commands",
-    "moders_texts",
+    "moders_messages",
     "moders_callbacks",
     "moders_states",
-    "moders_callbacks_custom",
-    "moders_messages_custom",
 ]

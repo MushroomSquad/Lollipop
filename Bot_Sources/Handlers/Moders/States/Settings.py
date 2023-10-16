@@ -2,8 +2,8 @@ from typing import List
 from aiogram.types import (
     Message,
 )
-from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
 
 all: List[str] = [
     "Message",
